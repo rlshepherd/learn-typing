@@ -1,45 +1,94 @@
 <template>
   <div id="app">
     <word-card
-      v-bind:word="getWord"
+      v-bind:word="currentWord"
       @spelled-correctly="nextWord"
+      @typing-error="incrementErrorCount"
+      @keystroke="handleKeystroke"
       ></word-card>
+    <progress-card
+      v-bind:wordCount="completedWordCount"
+      v-bind:totalWords="totalWordCount"
+    ></progress-card>
+    <typing-hint
+      v-bind:next-letter="nextLetter"
+      v-bind:start="lastKeystrokeTimestamp"
+      v-bind:timeout="showHintTimeout"
+    ></typing-hint>
   </div>
 </template>
 
 <script>
 import WordCard  from "./components/WordCard.vue";
+import ProgressCard from "./components/ProgressCard";
+import TypingHint from "./components/TypingHint";
+import json from './assets/1000words.json';
 
 export default {
   name: 'App',
   data: function() {
     return {
-      words: [
-        'this', 
-        'that',
-        'something',
-        'else',
-      ],
-      wordCount: 0, 
+      words: json,
+      completedWordCount: 0, 
+      errorCount: 0,
+      appStartTime: Date.now(),
+      lastKeystrokeTimestamp: Date.now(),
+      bufferedWordsPerMinute: 0,
+      nextLetter: json[0].charAt(0),
+      showHintTimeout: 2000, // show a hint after how long of no typing.
+      now: Date.now(),
     }
   },
   components: {
-    WordCard
+    WordCard,
+    ProgressCard,
+    TypingHint,
   },
   methods: {
     nextWord: function() {
-      if (this.wordCount < this.words.length - 1) {
-        this.wordCount += 1;
+      this.updateCompletedWordCount();
+      this.updateWordsPerMinute();
+      this.resetKeystrokeTimestamp();
+    },
+    updateCompletedWordCount: function () {
+      if (this.completedWordCount < this.words.length - 1) {
+        this.completedWordCount += 1;
       } else { // start over after reaching the end of the word list
-        this.wordCount = 0; 
+        this.completedWordCount = 0; 
       }
+    },
+    updateWordsPerMinute: function () {
+      this.bufferedWordsPerMinute = this.wordsPerMinute;
+    },
+    handleKeystroke: function(nextLetter) {
+      this.resetKeystrokeTimestamp();
+      this.nextLetter = nextLetter.toLowerCase();
+      this.toggleTimer();
+    },
+    resetKeystrokeTimestamp: function () {
+      this.lastKeystrokeTimestamp = Date.now();
+    },
+    incrementErrorCount: function () {
+      this.errorCount += 1;
     },
   },
   computed: {
-    getWord: function() {
-      return this.words[this.wordCount];
-    }
-  }
+    currentWord: function () {
+      return this.words[this.completedWordCount];
+    },
+    totalWordCount: function() {
+      return this.words.length;
+    },
+    errorsPerWord: function() {
+      return (this.errorCount / this.completedWordCount);
+    },
+    elapsedTimeInSeconds: function() {
+      return (Date.now() - this.appStartTime) / 1000;
+    },
+    wordsPerMinute: function() {
+      return this.completedWordCount / (this.elapsedTimeInSeconds / 60);
+    },
+  },
 }
 </script>
 
@@ -51,7 +100,11 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 body {
   background-color: #ffffea;

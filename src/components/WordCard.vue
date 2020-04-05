@@ -5,6 +5,7 @@
             id="mainInput"
             type="text"
             v-model="inputText"
+            autocomplete="off"
         >
     </div>
 </template>
@@ -21,54 +22,57 @@ export default {
         }
     },
     computed: {
-            spelledCorrectly: function() {
-                return this.inputText === this.word;
-            },
-            matchingSoFar: function() {
-                return this.word.slice(0, this.inputText.length) === this.inputText;
-            }, 
-            nextLetter: function() {
-                let index = this.inputText.length;
-                return this.word.slice(index, index + 1);
-            },
-            positiveFeedbackRule: function () {
-                return this.inputText.length > 0 && (this.matchingSoFar || this.spelledCorrectly);
-            },
-            negativeFeedbackRule: function () {
-                return !this.matchingSoFar; 
-            }
+        spelledCorrectly: function() {
+            return this.inputText === this.word;
         },
-        watch: {
-            inputText: function() {
-                let mainInputClasses = document.getElementById("mainInput").classList;
-                
-                // remove any existing feedback.
-                if (mainInputClasses.contains('negative-feedback')) {
-                    mainInputClasses.remove('negative-feedback');
-                }
-                if (mainInputClasses.contains('positive-feedback')) {
-                    mainInputClasses.remove('positive-feedback');
-                }
-
-                // add new feedback.
-                if (this.negativeFeedbackRule) {
-                    mainInputClasses.add('negative-feedback')
-                    setTimeout(function(){
-                        mainInputClasses.remove('negative-feedback')
-                    }, 300); // animation duration should match CSS animation duration.
-                } else if (this.positiveFeedbackRule) {
-                    mainInputClasses.add('positive-feedback')
-                    setTimeout(function(){
-                        mainInputClasses.remove('positive-feedback')
-                    }, 300);
-                }
-
-                if (this.spelledCorrectly){
-                    this.$emit('spelled-correctly');
-                    this.inputText = '';
-                }
-            }
+        matchingSoFar: function() {
+            return this.word.slice(0, this.inputText.length) === this.inputText;
+        }, 
+        nextLetter: function() {
+            let index = this.inputText.length;
+            return this.word.slice(index, index + 1);
         },
+        positiveFeedbackRule: function () {
+            return this.inputText.length > 0 && (this.matchingSoFar || this.spelledCorrectly);
+        },
+        negativeFeedbackRule: function () {
+            return !this.matchingSoFar; 
+        }
+    },
+    watch: {
+        inputText: function() {
+            let mainInputClasses = document.getElementById("mainInput").classList;
+            
+            this.$emit('keystroke', this.nextLetter); 
+
+            // remove any existing feedback.
+            if (mainInputClasses.contains('negative-feedback')) {
+                mainInputClasses.remove('negative-feedback');
+            }
+            if (mainInputClasses.contains('positive-feedback')) {
+                mainInputClasses.remove('positive-feedback');
+            }
+
+            // add new feedback.
+            if (this.negativeFeedbackRule) {
+                mainInputClasses.add('negative-feedback')
+                this.$emit('typing-error'); // increment total error count.
+                setTimeout(function(){
+                    mainInputClasses.remove('negative-feedback')
+                }, 300); // animation duration should match CSS animation duration.
+            } else if (this.positiveFeedbackRule) {
+                mainInputClasses.add('positive-feedback')
+                setTimeout(function(){
+                    mainInputClasses.remove('positive-feedback')
+                }, 300);
+            }
+
+            if (this.spelledCorrectly){
+                this.$emit('spelled-correctly');
+                this.inputText = '';
+            }
+        }
+    },
 }
 </script>
 
