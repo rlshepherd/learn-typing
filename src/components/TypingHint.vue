@@ -56,17 +56,18 @@ export default {
 </script>
 <style scoped>
 .typing-hint {
-    position: relative;
-    margin-top: 5%;
     padding-left: 20px;
-    width: 70%;
+    width: 50%;
     display: flex;
+    flex-shrink: 0;
+    justify-content: center;
 }
 .keyboard {
     position: absolute;
+    bottom: 0;
     max-width: 100%;
     width: inherit;
-    left: 17.5%;
+    padding-left: 1%;
 }
 .hintfade-leave-active, .nohintfade-enter-active {
   transition: opacity 0.5s;
