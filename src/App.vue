@@ -1,5 +1,8 @@
 <template>
   <div id="app">
+    <div class="logo-box">
+      <img src="./assets/touch-type-logo.png" class="logo">
+    </div>
     <word-card
       v-bind:word="currentWord"
       @spelled-correctly="nextWord"
@@ -111,7 +114,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 100px;
+  margin-top: ;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -119,5 +122,11 @@ export default {
 }
 body {
   background-color: #ffffea;
+}
+.logo-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  width: 100%;
 }
 </style>
