@@ -73,7 +73,10 @@ export default {
     },
     importAll: function (r) {
       let img = new Image();
-      r.keys().forEach(key => (img.src = r(key)))
+      r.keys().forEach(key => {
+        img.src = r(key);
+        console.log(r(key));
+        })
     }
   },
   computed: {
