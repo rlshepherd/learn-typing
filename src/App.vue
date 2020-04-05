@@ -37,6 +37,7 @@ export default {
       nextLetter: json[0].charAt(0),
       showHintTimeout: 30000,
       now: Date.now(),
+      imgs: {},
     }
   },
   components: {
@@ -72,10 +73,11 @@ export default {
       this.errorCount += 1;
     },
     importAll: function (r) {
-      let img = new Image();
       r.keys().forEach(key => {
+        let img = new Image();
         img.src = "https://www.touchtype.xyz" + r(key);
         console.log("https://www.touchtype.xyz" + r(key));
+        this.imgs[key]= img;
         })
     }
   },
