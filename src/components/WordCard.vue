@@ -80,6 +80,10 @@ export default {
 
 /* TODO make animation duration a global variable shared between CSS and JS */
 
+.word-card {
+    margin-top: 15vh;
+}
+
 #mainInput {
     border-radius: 25px;
     border: 2px solid #609;

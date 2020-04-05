@@ -124,9 +124,9 @@ body {
   background-color: #ffffea;
 }
 .logo-box {
-  display: flex;
-  flex-direction: row;
-  justify-content: left;
-  width: 100%;
+  position: absolute;
+  width: 8%;
+  top: 2%;
+  left: 1%;
 }
 </style>
