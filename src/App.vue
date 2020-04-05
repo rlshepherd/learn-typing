@@ -74,8 +74,8 @@ export default {
     importAll: function (r) {
       let img = new Image();
       r.keys().forEach(key => {
-        img.src = r(key);
-        console.log(r(key));
+        img.src = "https://www.touchtype.xyz" + r(key);
+        console.log("https://www.touchtype.xyz" + r(key));
         })
     }
   },
