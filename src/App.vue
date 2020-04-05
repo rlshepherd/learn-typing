@@ -71,6 +71,10 @@ export default {
     incrementErrorCount: function () {
       this.errorCount += 1;
     },
+    importAll: function (r) {
+      let img = new Image();
+      r.keys().forEach(key => (img.src = r(key)))
+    }
   },
   computed: {
     currentWord: function () {
@@ -89,6 +93,9 @@ export default {
       return this.completedWordCount / (this.elapsedTimeInSeconds / 60);
     },
   },
+  mounted () {
+    this.importAll(require.context('./assets/letters', true, /\.png$/))
+  }
 }
 </script>
 
