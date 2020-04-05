@@ -26,18 +26,18 @@ export default {
         nextLetter: String,
         start: Number,
         timeout: Number,
-        timeFromNow: Number,
+        timeFromLastKeystroke: Number,
     },
     created () {
-        this.getTimeFromNow()
-        setInterval(this.getTimeFromNow, 1000)
+        this.gettimeFromLastKeystroke()
+        setInterval(this.gettimeFromLastKeystroke, 1000)
     },
     destroyed () {
-        clearInterval(this.getTimeFromNow)
+        clearInterval(this.gettimeFromLastKeystroke)
     },
     methods: {
-        getTimeFromNow () {
-            this.timeFromNow = Date.now() - this.start;
+        gettimeFromLastKeystroke () {
+            this.timeFromLastKeystroke = Date.now() - this.start;
         },
         hintImageURI: function() {
             var images = require.context('../assets/letters', false, /\.png$/)
@@ -49,7 +49,7 @@ export default {
     },
     computed: {
         needsHint: function() {
-            return this.timeFromNow > this.timeout;
+            return this.timeFromLastKeystroke > this.timeout;
         }
     }
 }

@@ -35,7 +35,7 @@ export default {
       lastKeystrokeTimestamp: Date.now(),
       bufferedWordsPerMinute: 0,
       nextLetter: json[0].charAt(0),
-      showHintTimeout: 2000, // show a hint after how long of no typing.
+      showHintTimeout: 30000,
       now: Date.now(),
     }
   },
@@ -61,9 +61,9 @@ export default {
       this.bufferedWordsPerMinute = this.wordsPerMinute;
     },
     handleKeystroke: function(nextLetter) {
+      this.showHintTimeout = 7000; // don't show hints quickly until after they start.
       this.resetKeystrokeTimestamp();
       this.nextLetter = nextLetter.toLowerCase();
-      this.toggleTimer();
     },
     resetKeystrokeTimestamp: function () {
       this.lastKeystrokeTimestamp = Date.now();
